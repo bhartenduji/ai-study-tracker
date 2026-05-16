@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI/ML Roadmap — Full Improvement Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07090f;
+  --bg2: #0d1117;
+  --surface: #111827;
+  --surface2: #1a2233;
+  --border: #1e2d45;
+  --border2: #2a3d5a;
+  --c1: #00d4ff;
+  --c2: #7c3aed;
+  --c3: #10b981;
+  --c4: #f59e0b;
+  --c5: #ef4444;
+  --c6: #ec4899;
+  --c7: #fb923c;
+  --text: #e2e8f0;
+  --text2: #94a3b8;
+  --muted: #475569;
+  --white: #fff;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+}
+a { color: var(--c1); text-decoration:none; }
+
+/* SCROLL BAR */
+#sp {
+  position:fixed; top:0; left:0;
+  height:3px; width:0%;
+  background: linear-gradient(90deg, var(--c1), var(--c2), var(--c6));
+  z-index:1000;
+  transition: width 0.1s linear;
+}
+
+/* NAV */
+nav {
+  position:sticky; top:3px; z-index:999;
+  background: rgba(7,9,15,0.94);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  display:flex; align-items:center; gap:8px;
+  padding:0 20px; height:50px;
+}
+.nbrand { font-family:'Syne',sans-serif; font-weight:800; font-size:13px; color:var(--c1); white-space:nowrap; }
+.nlinks { display:flex; gap:4px; overflow-x:auto; flex:1; scrollbar-width:none; }
+.nlinks::-webkit-scrollbar { display:none; }
+.nlink {
+  padding:4px 10px; border-radius:6px; border:1px solid var(--border);
+  background:transparent; color:var(--text2); font-size:10px;
+  letter-spacing:0.5px; white-space:nowrap; cursor:pointer;
+  font-family:'IBM Plex Mono',monospace;
+  transition:all 0.2s;
+}
+.nlink:hover { background:var(--surface2); color:var(--text); border-color:var(--border2); }
+
+/* HERO */
+.hero {
+  text-align:center;
+  padding:72px 24px 56px;
+  position:relative; overflow:hidden;
+}
+.hero::before {
+  content:'';
+  position:absolute; inset:0;
+  background: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(0,212,255,0.07), transparent);
+  pointer-events:none;
+}
+.grid-bg {
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,212,255,0.025) 1px,transparent 1px);
+  background-size:48px 48px;
+  pointer-events:none;
+}
+.hero-tag {
+  display:inline-block; font-family:'IBM Plex Mono',monospace;
+  font-size:10px; letter-spacing:4px; text-transform:uppercase;
+  color:var(--c1); border:1px solid rgba(0,212,255,0.3);
+  padding:4px 16px; border-radius:20px; margin-bottom:20px;
+}
+.hero h1 {
+  font-family:'Syne',sans-serif;
+  font-size:clamp(1.9rem,5vw,3.4rem);
+  font-weight:800; line-height:1.1;
+}
+.hero h1 span { color:var(--c1); }
+.hero-sub {
+  color:var(--text2); font-size:14px; margin-top:14px;
+  max-width:560px; margin-left:auto; margin-right:auto;
+}
+.stats-row {
+  display:flex; gap:16px; justify-content:center;
+  flex-wrap:wrap; margin-top:36px;
+}
+.stat {
+  padding:10px 20px; border:1px solid var(--border);
+  border-radius:10px; background:var(--surface);
+  text-align:center;
+}
+.stat strong { font-family:'Syne',sans-serif; font-size:20px; display:block; color:var(--c1); }
+.stat span { font-size:11px; color:var(--text2); }
+
+/* MAIN */
+.main { max-width:1060px; margin:0 auto; padding:40px 20px 120px; }
+
+/* TOC */
+.toc-grid {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:10px;
+  margin-bottom:48px;
+}
+.toc-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px; padding:14px 16px;
+  cursor:pointer;
+  transition:all 0.2s;
+  position:relative; overflow:hidden;
+}
+.toc-card::before {
+  content:''; position:absolute;
+  left:0; top:0; bottom:0; width:3px;
+}
+.toc-card:hover { background:var(--surface2); border-color:var(--border2); }
+.toc-num { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); margin-bottom:4px; }
+.toc-name { font-family:'Syne',sans-serif; font-weight:700; font-size:13px; }
+.toc-count { font-size:10px; color:var(--text2); margin-top:4px; }
+
+/* SECTION */
+.section { margin-bottom:56px; }
+.sec-header {
+  display:flex; align-items:center; gap:14px;
+  margin-bottom:24px; padding-bottom:16px;
+  border-bottom:1px solid var(--border);
+}
+.sec-num {
+  font-family:'Syne',sans-serif; font-weight:800; font-size:2rem;
+  line-height:1; flex-shrink:0; opacity:0.15;
+}
+.sec-icon { font-size:24px; flex-shrink:0; }
+.sec-title { font-family:'Syne',sans-serif; font-weight:800; font-size:1.3rem; }
+.sec-desc { font-size:12px; color:var(--text2); margin-top:4px; }
+.sec-badge {
+  font-size:9px; padding:3px 10px; border-radius:20px;
+  font-family:'IBM Plex Mono',monospace; letter-spacing:1px;
+  text-transform:uppercase; border:1px solid; white-space:nowrap;
+  flex-shrink:0; align-self:flex-start; margin-top:4px;
+}
+
+/* ITEM */
+.item {
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:12px;
+  margin-bottom:16px;
+  overflow:hidden;
+  transition:box-shadow 0.2s;
+}
+.item:hover { box-shadow:0 0 0 1px var(--border2); }
+.item-header {
+  display:flex; align-items:flex-start; gap:14px;
+  padding:18px 20px 14px;
+}
+.item-left { flex:1; }
+.item-id {
+  font-family:'IBM Plex Mono',monospace; font-size:9px;
+  letter-spacing:2px; color:var(--muted); text-transform:uppercase;
+  margin-bottom:6px;
+}
+.item-title { font-family:'Syne',sans-serif; font-weight:700; font-size:1rem; }
+.item-meta { display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; align-items:center; }
+.tag {
+  font-size:9px; padding:3px 9px; border-radius:4px;
+  font-family:'IBM Plex Mono',monospace; letter-spacing:0.5px;
+  text-transform:uppercase; font-weight:500; border:1px solid;
+}
+.tag-high { color:#ef4444; border-color:rgba(239,68,68,0.3); background:rgba(239,68,68,0.07); }
+.tag-med { color:#f59e0b; border-color:rgba(245,158,11,0.3); background:rgba(245,158,11,0.07); }
+.tag-low { color:#10b981; border-color:rgba(16,185,129,0.3); background:rgba(16,185,129,0.07); }
+.tag-design { color:#00d4ff; border-color:rgba(0,212,255,0.3); background:rgba(0,212,255,0.07); }
+.tag-ux { color:#a78bfa; border-color:rgba(167,139,250,0.3); background:rgba(167,139,250,0.07); }
+.tag-content { color:#34d399; border-color:rgba(52,211,153,0.3); background:rgba(52,211,153,0.07); }
+.tag-tech { color:#fb923c; border-color:rgba(251,146,60,0.3); background:rgba(251,146,60,0.07); }
+.tag-ia { color:#ec4899; border-color:rgba(236,72,153,0.3); background:rgba(236,72,153,0.07); }
+
+.item-body { padding:0 20px 18px; }
+.problem-block, .solution-block, .code-block {
+  border-radius:8px; padding:13px 15px; margin-bottom:10px;
+}
+.problem-block {
+  background:rgba(239,68,68,0.05);
+  border:1px solid rgba(239,68,68,0.15);
+}
+.solution-block {
+  background:rgba(16,185,129,0.05);
+  border:1px solid rgba(16,185,129,0.15);
+}
+.code-block {
+  background:rgba(0,212,255,0.04);
+  border:1px solid rgba(0,212,255,0.15);
+}
+.block-label {
+  font-size:9px; letter-spacing:2px; text-transform:uppercase;
+  font-family:'IBM Plex Mono',monospace; margin-bottom:8px;
+  display:flex; align-items:center; gap:6px;
+}
+.block-label.problem { color:#ef4444; }
+.block-label.solution { color:#10b981; }
+.block-label.code { color:#00d4ff; }
+.block-text { font-size:13px; color:var(--text); line-height:1.7; }
+pre {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px; color:#94a3b8;
+  white-space:pre-wrap; word-break:break-all;
+  line-height:1.7;
+}
+pre .hi { color:#00d4ff; }
+pre .hi2 { color:#10b981; }
+pre .hi3 { color:#f59e0b; }
+pre .hi4 { color:#a78bfa; }
+pre .hi5 { color:#ec4899; }
+
+.steps-list { margin-top:8px; }
+.step-item {
+  display:flex; gap:10px; margin-bottom:8px;
+  font-size:13px; color:var(--text);
+}
+.step-dot {
+  width:20px; height:20px; border-radius:50%;
+  background:var(--surface2); border:1px solid var(--border2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:9px; font-family:'IBM Plex Mono',monospace;
+  flex-shrink:0; margin-top:2px; color:var(--text2);
+}
+
+/* DIVIDER */
+.cat-divider {
+  display:flex; align-items:center; gap:12px;
+  margin:40px 0 28px;
+}
+.cat-label {
+  font-family:'Syne',sans-serif; font-weight:800; font-size:11px;
+  letter-spacing:3px; text-transform:uppercase; white-space:nowrap;
+}
+.cat-line { flex:1; height:1px; background:var(--border); }
+
+/* SUMMARY TABLE */
+.sum-table {
+  width:100%; border-collapse:collapse;
+  font-size:12px; margin-top:8px;
+}
+.sum-table th {
+  background:var(--surface2); color:var(--text2);
+  font-family:'IBM Plex Mono',monospace; font-size:9px;
+  letter-spacing:2px; text-transform:uppercase;
+  padding:10px 14px; text-align:left; border-bottom:1px solid var(--border);
+}
+.sum-table td {
+  padding:10px 14px; border-bottom:1px solid var(--border);
+  vertical-align:top; color:var(--text);
+}
+.sum-table tr:last-child td { border-bottom:none; }
+.sum-table tr:hover td { background:rgba(255,255,255,0.02); }
+.prio-badge {
+  display:inline-block; padding:2px 8px; border-radius:4px;
+  font-size:9px; font-family:'IBM Plex Mono',monospace;
+  letter-spacing:0.5px; text-transform:uppercase; border:1px solid;
+}
+.prio-p1 { color:#ef4444; border-color:rgba(239,68,68,0.4); background:rgba(239,68,68,0.08); }
+.prio-p2 { color:#f59e0b; border-color:rgba(245,158,11,0.4); background:rgba(245,158,11,0.08); }
+.prio-p3 { color:#10b981; border-color:rgba(16,185,129,0.4); background:rgba(16,185,129,0.08); }
+
+/* EFFORT */
+.effort {
+  display:inline-flex; gap:3px; align-items:center; margin-left:6px;
+}
+.effort-dot {
+  width:6px; height:6px; border-radius:50%;
+  background:var(--border2);
+}
+.effort-dot.on { background:var(--c4); }
+
+/* BOTTOM */
+.bottom-note {
+  text-align:center; padding:40px 20px;
+  border-top:1px solid var(--border);
+  color:var(--text2); font-size:12px;
+}
+
+/* BTT */
+#btt {
+  position:fixed; bottom:24px; right:24px;
+  width:38px; height:38px; border-radius:50%;
+  background:var(--surface2); border:1px solid var(--border2);
+  color:var(--text2); font-size:16px; cursor:pointer;
+  opacity:0; transition:opacity 0.3s; display:none;
+}
+#btt.show { opacity:1; display:flex; align-items:center; justify-content:center; }
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(14px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.hero > * { animation: fadeUp 0.5s ease both; }
+.hero .hero-tag { animation-delay:0s; }
+.hero h1 { animation-delay:0.1s; }
+.hero .hero-sub { animation-delay:0.2s; }
+.hero .stats-row { animation-delay:0.3s; }
+
+@media (max-width:640px) {
+  .item-header { flex-direction:column; gap:10px; }
+  nav { padding:0 12px; }
+  .hero { padding:48px 16px 36px; }
+}
+</style>
+</head>
+<body>
+
+<div id="sp"></div>
+
+<nav>
+  <div class="nbrand">IMPROVEMENT REPORT</div>
+  <div class="nlinks">
+    <button class="nlink" onclick="document.getElementById('cat-design').scrollIntoView({behavior:'smooth'})">🎨 Design</button>
+    <button class="nlink" onclick="document.getElementById('cat-ux').scrollIntoView({behavior:'smooth'})">⚡ UX</button>
+    <button class="nlink" onclick="document.getElementById('cat-ia').scrollIntoView({behavior:'smooth'})">🗂 Info Architecture</button>
+    <button class="nlink" onclick="document.getElementById('cat-content').scrollIntoView({behavior:'smooth'})">📚 Content</button>
+    <button class="nlink" onclick="document.getElementById('cat-tech').scrollIntoView({behavior:'smooth'})">🔧 Technical</button>
+    <button class="nlink" onclick="document.getElementById('summary').scrollIntoView({behavior:'smooth'})">📊 Summary</button>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="grid-bg"></div>
+  <div class="hero-tag">AI/ML Roadmap v2 · Full Review</div>
+  <h1>Improvement<br><span>Audit Report</span></h1>
+  <div class="hero-sub">A systematic, detailed breakdown of every design, UX, information architecture, content, and technical improvement across 28 identified areas.</div>
+  <div class="stats-row">
+    <div class="stat"><strong>28</strong><span>Total Improvements</span></div>
+    <div class="stat"><strong>5</strong><span>Categories</span></div>
+    <div class="stat"><strong>9</strong><span>Critical Priority</span></div>
+    <div class="stat"><strong>~40h</strong><span>Estimated Dev Work</span></div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- TOC -->
+  <div class="toc-grid">
+    <div class="toc-card" style="border-color:rgba(0,212,255,0.3);" onclick="document.getElementById('cat-design').scrollIntoView({behavior:'smooth'})">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c1);border-radius:3px 0 0 3px;"></div>
+      <div class="toc-num">01</div>
+      <div class="toc-name" style="color:var(--c1)">🎨 Design</div>
+      <div class="toc-count">7 improvements</div>
+    </div>
+    <div class="toc-card" style="border-color:rgba(167,139,250,0.3);" onclick="document.getElementById('cat-ux').scrollIntoView({behavior:'smooth'})">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:#a78bfa;border-radius:3px 0 0 3px;"></div>
+      <div class="toc-num">02</div>
+      <div class="toc-name" style="color:#a78bfa">⚡ UX & Interaction</div>
+      <div class="toc-count">6 improvements</div>
+    </div>
+    <div class="toc-card" style="border-color:rgba(236,72,153,0.3);" onclick="document.getElementById('cat-ia').scrollIntoView({behavior:'smooth'})">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:#ec4899;border-radius:3px 0 0 3px;"></div>
+      <div class="toc-num">03</div>
+      <div class="toc-name" style="color:#ec4899">🗂 Info Architecture</div>
+      <div class="toc-count">5 improvements</div>
+    </div>
+    <div class="toc-card" style="border-color:rgba(16,185,129,0.3);" onclick="document.getElementById('cat-content').scrollIntoView({behavior:'smooth'})">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c3);border-radius:3px 0 0 3px;"></div>
+      <div class="toc-num">04</div>
+      <div class="toc-name" style="color:var(--c3)">📚 Content Gaps</div>
+      <div class="toc-count">7 improvements</div>
+    </div>
+    <div class="toc-card" style="border-color:rgba(251,146,60,0.3);" onclick="document.getElementById('cat-tech').scrollIntoView({behavior:'smooth'})">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c7);border-radius:3px 0 0 3px;"></div>
+      <div class="toc-num">05</div>
+      <div class="toc-name" style="color:var(--c7)">🔧 Technical</div>
+      <div class="toc-count">3 improvements</div>
+    </div>
+    <div class="toc-card" style="border-color:rgba(245,158,11,0.3);" onclick="document.getElementById('summary').scrollIntoView({behavior:'smooth'})">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c4);border-radius:3px 0 0 3px;"></div>
+      <div class="toc-num">06</div>
+      <div class="toc-name" style="color:var(--c4)">📊 Priority Matrix</div>
+      <div class="toc-count">All 28 ranked</div>
+    </div>
+  </div>
+
+  <!-- ════════ DESIGN ════════ -->
+  <div id="cat-design">
+    <div class="cat-divider">
+      <div class="cat-label" style="color:var(--c1)">🎨 Category 01 — Visual Design</div>
+      <div class="cat-line"></div>
+      <div style="font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;white-space:nowrap;">7 items</div>
+    </div>
+
+    <!-- D-01 -->
+    <div class="item" id="d01">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">D-01 · Visual Design</div>
+          <div class="item-title">Minimum Font Size Violations</div>
+          <div class="item-meta">
+            <span class="tag tag-high">🔴 Critical</span>
+            <span class="tag tag-design">Design</span>
+            <span class="tag tag-low" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●○○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">Multiple UI elements use illegibly small font sizes. <code>phase-time</code> is <strong>8px</strong>, <code>phase-label</code> is <strong>9px</strong>, <code>group-label</code> is <strong>9px</strong>, nav button text is <strong>10px</strong>, filter button text is <strong>9px</strong>, and time badges are also <strong>9px</strong>. WCAG 2.1 AA requires a minimum of 12px for non-decorative text, and comfortable reading requires 12–13px minimum for labels. This fails accessibility standards and strains the eye, especially on standard-resolution displays.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix</div>
+          <div class="block-text">Apply a global minimum of <strong>11px</strong> for all label text and <strong>12px</strong> for anything a user must read. Specifically: phase labels → 11px, phase time → 11px, group labels → 11px, filter buttons → 11px, time badges → 11px, nav buttons → 11px. This is a pure CSS change with no layout impact.</div>
+        </div>
+        <div class="code-block">
+          <div class="block-label code">▸ Code Fix</div>
+          <pre><span class="hi">/* Before */</span>
+.phase-label  { font-size: <span class="hi5">9px</span>; }
+.phase-time   { font-size: <span class="hi5">8px</span>; }
+.group-label  { font-size: <span class="hi5">9px</span>; }
+.filter-btn   { font-size: <span class="hi5">9px</span>; }
+.time-badge   { font-size: <span class="hi5">10px</span>; }
+.nav-btn      { font-size: <span class="hi5">10px</span>; }
+
+<span class="hi2">/* After — all bumped to 11px minimum */</span>
+.phase-label  { font-size: <span class="hi2">11px</span>; }
+.phase-time   { font-size: <span class="hi2">11px</span>; }
+.group-label  { font-size: <span class="hi2">11px</span>; letter-spacing: <span class="hi2">2px</span>; }
+.filter-btn   { font-size: <span class="hi2">11px</span>; }
+.time-badge   { font-size: <span class="hi2">11px</span>; }
+.nav-btn      { font-size: <span class="hi2">11px</span>; }</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- D-02 -->
+    <div class="item" id="d02">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">D-02 · Visual Design</div>
+          <div class="item-title">No Mobile Responsive Breakpoints</div>
+          <div class="item-meta">
+            <span class="tag tag-high">🔴 Critical</span>
+            <span class="tag tag-design">Design</span>
+            <span class="tag tag-med" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●●○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">The entire file contains <strong>zero @media queries</strong>. The sticky nav overflows horizontally on mobile. The phase timeline uses absolute-positioned connector lines that break on narrow viewports. The topics-grid collapses due to <code>minmax(240px,1fr)</code> but the filter bar, hero stats row, and portfolio steps don't adapt. The resource grid, algorithm comparison table, and tools grid all overflow horizontally on screens below 480px.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix — 3 key breakpoints</div>
+          <div class="steps-list">
+            <div class="step-item"><div class="step-dot">1</div><div><strong>≤ 768px (tablet):</strong> Collapse the nav brand + hide non-essential nav buttons. Stack the phase timeline into a 2-column grid. Reduce hero padding.</div></div>
+            <div class="step-item"><div class="step-dot">2</div><div><strong>≤ 540px (mobile):</strong> Convert phase timeline to a vertical list. Make filter bar scroll horizontally. Force comparison table to scroll with <code>overflow-x: auto</code>. Stack stat chips.</div></div>
+            <div class="step-item"><div class="step-dot">3</div><div><strong>≤ 380px (small mobile):</strong> Reduce hero h1 further. Reduce section padding. Collapse all filter buttons behind a "Filters ▾" dropdown.</div></div>
+          </div>
+        </div>
+        <div class="code-block">
+          <div class="block-label code">▸ Code Skeleton</div>
+          <pre><span class="hi">@media (max-width: 768px) {</span>
+  .nav-sections { max-width: calc(100vw - 200px); }
+  .phase-bar { flex-wrap: wrap; justify-content: center; }
+  .hero { padding: 48px 16px 32px; }
+  .stats-row { gap: 10px; }
+  .stat-chip { padding: 6px 12px; }
+<span class="hi">}</span>
+
+<span class="hi">@media (max-width: 540px) {</span>
+  .phase-bar { flex-direction: column; align-items: center; }
+  .phase-item::after { display: none; }
+  .filter-bar { overflow-x: auto; flex-wrap: nowrap; }
+  .topics-grid { grid-template-columns: 1fr; }
+  .comp-table-wrap { overflow-x: auto; }
+<span class="hi">}</span>
+
+<span class="hi">@media (max-width: 380px) {</span>
+  .hero h1 { font-size: 1.6rem; }
+  .main { padding: 24px 12px 80px; }
+  .sec-inner { padding: 14px; }
+<span class="hi">}</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- D-03 -->
+    <div class="item" id="d03">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">D-03 · Visual Design</div>
+          <div class="item-title">Phase Timeline Connector Line Misalignment</div>
+          <div class="item-meta">
+            <span class="tag tag-med">🟡 Moderate</span>
+            <span class="tag tag-design">Design</span>
+            <span class="tag tag-low" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●○○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">The connector line between phase dots is drawn using <code>.phase-item::after</code> with <code>left:50%; right:-50%</code>. This creates a visual gap or overlap depending on the viewport width, because the connector does not truly connect center-to-center — it extends 50% to the right from the center, which can be longer or shorter than the actual gap between phase dots. On viewports below 700px it noticeably misaligns.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix</div>
+          <div class="block-text">Replace the CSS pseudo-element connector with an SVG-based approach or a simpler method using a full-width background line behind the dots. Position a single horizontal rule <em>behind</em> all the phase items using absolute positioning on the parent container. This guarantees perfect alignment regardless of viewport width.</div>
+        </div>
+        <div class="code-block">
+          <div class="block-label code">▸ Robust Fix</div>
+          <pre><span class="hi2">/* Remove ::after on items. Add a background line on parent. */</span>
+.phase-bar {
+  position: relative;
+}
+.phase-bar::before {
+  content: '';
+  position: absolute;
+  top: <span class="hi3">18px</span>; <span class="hi">/* vertically center on dot */</span>
+  left: 10%; right: 10%; <span class="hi">/* skip first/last dot */</span>
+  height: 2px;
+  background: var(--border);
+  z-index: 0;
+}
+.phase-dot {
+  position: relative;
+  z-index: 1; <span class="hi">/* dots appear above the line */</span>
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- D-04 -->
+    <div class="item" id="d04">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">D-04 · Visual Design</div>
+          <div class="item-title">Filter Bar Visual Prominence Too Low</div>
+          <div class="item-meta">
+            <span class="tag tag-med">🟡 Moderate</span>
+            <span class="tag tag-design">Design</span>
+            <span class="tag tag-low" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●○○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">The filter bar uses the same <code>--surface</code> background and <code>--border</code> as every section header and card. It blends into the page so thoroughly that first-time visitors scroll past it without registering it as a key interactive control. In user testing, filter bars that are visually subordinate to the content they filter result in less than 20% usage rate.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix</div>
+          <div class="block-text">Add a left accent bar (like section headers use), a subtle gradient background, or a slightly contrasting surface color. Add a "FILTER VIEW" label before the buttons in a more prominent size. Add a gentle glow or <code>box-shadow</code> to active filter buttons so selected state is immediately visible. Consider making the filter bar sticky just below the top nav so it follows the user while scrolling.</div>
+        </div>
+        <div class="code-block">
+          <div class="block-label code">▸ Enhanced Filter Bar CSS</div>
+          <pre>.filter-bar {
+  background: linear-gradient(135deg, <span class="hi">rgba(0,212,255,0.04)</span>, <span class="hi4">rgba(124,58,237,0.04)</span>);
+  border: 1px solid <span class="hi">rgba(0,212,255,0.15)</span>;
+  position: sticky;
+  top: 55px; <span class="hi3">/* just below nav */</span>
+  z-index: 99;
+  backdrop-filter: blur(10px);
+}
+.filter-btn.active {
+  background: var(--surface2);
+  color: var(--text);
+  border-color: var(--border2);
+  box-shadow: 0 0 8px <span class="hi">rgba(0,212,255,0.18)</span>;
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- D-05 -->
+    <div class="item" id="d05">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">D-05 · Visual Design</div>
+          <div class="item-title">Dark Mode Only — No Accessible Light Theme</div>
+          <div class="item-meta">
+            <span class="tag tag-med">🟡 Moderate</span>
+            <span class="tag tag-design">Design</span>
+            <span class="tag tag-low" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●●○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">A light theme is defined via <code>[data-theme="light"]</code> but several hardcoded inline colors don't respect it. Examples: the can-do-box inline gradients, section title inline colors like <code>style="color:var(--c1)"</code> (fine), but quiz option buttons have hardcoded background logic, the <code>#topnav</code> rgba background uses <code>rgba(6,10,18,0.92)</code> hardcoded instead of being derived from the variable, and the <code>.topics-grid</code> uses <code>--bg2</code> which in light mode is too dark. Several badge hardcoded inline styles don't adapt to light mode either.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix</div>
+          <div class="block-text">Audit every inline <code>style="..."</code> on HTML elements — replace any hardcoded hex with CSS variables. Add missing light-mode overrides for quiz feedback colors, progress bar colors, and the nav background. Test by loading the page, toggling to light mode, and scanning for any dark-on-dark or invisible elements.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D-06 -->
+    <div class="item" id="d06">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">D-06 · Visual Design</div>
+          <div class="item-title">Algorithm Comparison Table Needs Responsive Treatment</div>
+          <div class="item-meta">
+            <span class="tag tag-med">🟡 Moderate</span>
+            <span class="tag tag-design">Design</span>
+            <span class="tag tag-low" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●○○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">The comparison table (<code>.comp-table</code>) has 6 columns (Algorithm, Type, Best For, Pros, Cons, Complexity). On screen widths under 700px this table either overflows the container or forces each cell to become unreadably narrow. The <code>overflow-x:auto</code> wrapper is defined in the section but not explicitly styled with a visual scroll affordance, so users on touch devices may not know to swipe.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix</div>
+          <div class="block-text">Add a scroll affordance shadow on the right edge of the table wrapper. For screens below 600px, consider converting the table to a card-per-row layout using CSS (<code>display: block</code> on <code>td/tr</code> with <code>data-label</code> attributes). Also add a second comparison table for Deep Learning architectures (CNN vs RNN vs Transformer vs MLP) in Section 2 — currently absent.</div>
+        </div>
+        <div class="code-block">
+          <div class="block-label code">▸ Mobile Table Pattern</div>
+          <pre><span class="hi">@media (max-width: 600px) {</span>
+  .comp-table thead { display: none; }
+  .comp-table tr {
+    display: block;
+    margin-bottom: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px;
+  }
+  .comp-table td {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+    padding: 6px 4px;
+  }
+  .comp-table td::before {
+    content: attr(data-label);
+    color: var(--muted);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+  }
+<span class="hi">}</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- D-07 -->
+    <div class="item" id="d07">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">D-07 · Visual Design</div>
+          <div class="item-title">Missing Print / PDF Stylesheet</div>
+          <div class="item-meta">
+            <span class="tag tag-low">🟢 Enhancement</span>
+            <span class="tag tag-design">Design</span>
+            <span class="tag tag-low" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●○○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">The <code>printPDF()</code> function calls <code>expandAll()</code> and then <code>window.print()</code>, but there is no <code>@media print</code> stylesheet. This means the dark background, colored text, nav bar, filter bar, quiz boxes, and the fixed progress summary widget all print in full dark mode — wasting ink, making it unreadable, and cluttering the page with UI chrome that doesn't belong in a printed document.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix</div>
+          <div class="block-text">Add a comprehensive <code>@media print</code> block that: sets white background and black text across all elements, hides the nav, filter bar, progress summary, back-to-top button, quiz boxes, and all buttons, forces all sections open, removes animations, and sets a sensible page-break policy on sections.</div>
+        </div>
+        <div class="code-block">
+          <div class="block-label code">▸ Print Stylesheet</div>
+          <pre><span class="hi">@media print {</span>
+  body { background: white; color: black; font-size: 12pt; }
+  #topnav, #scroll-progress, .filter-bar,
+  .progress-summary, #btt, .quiz-box,
+  .ctrl-btn, .copy-res-btn, .toggle-arrow { display: none !important; }
+  .section { border: 1pt solid #ccc; margin-bottom: 16pt; }
+  .sec-body { max-height: none !important; }
+  .topic-card { border: 1pt solid #ddd; break-inside: avoid; }
+  .section { break-inside: avoid; }
+  a { color: black; text-decoration: none; }
+  a[href]::after { content: " (" attr(href) ")"; font-size: 8pt; color: #666; }
+<span class="hi">}</span></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ UX ════════ -->
+  <div id="cat-ux">
+    <div class="cat-divider">
+      <div class="cat-label" style="color:#a78bfa">⚡ Category 02 — UX & Interaction</div>
+      <div class="cat-line"></div>
+      <div style="font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;white-space:nowrap;">6 items</div>
+    </div>
+
+    <!-- U-01 -->
+    <div class="item" id="u01">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">U-01 · UX & Interaction</div>
+          <div class="item-title">Progress Lost on Tab Close (sessionStorage → localStorage)</div>
+          <div class="item-meta">
+            <span class="tag tag-high">🔴 Critical</span>
+            <span class="tag tag-ux">UX</span>
+            <span class="tag tag-low" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●○○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">All checkbox progress is saved to <code>sessionStorage</code> under the key <code>'ml_progress'</code>. Session storage is <strong>wiped when the browser tab is closed</strong>. A learner who spends 30 minutes marking topics complete, then closes the tab or restarts their browser, loses every checkmark. For a learning roadmap — the primary use case of which is tracking multi-week progress — this is a critical UX failure.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix</div>
+          <div class="block-text">Replace all instances of <code>sessionStorage</code> with <code>localStorage</code>. This is literally a find-and-replace of one word with zero architectural changes. Optionally, add a "Reset Progress" button in the progress summary widget to allow users to clear stored state intentionally.</div>
+        </div>
+        <div class="code-block">
+          <div class="block-label code">▸ One-Line Fix</div>
+          <pre><span class="hi5">// Before (progress lost on tab close)</span>
+sessionStorage.setItem('ml_progress', JSON.stringify(checkState));
+const saved = JSON.parse(sessionStorage.getItem('ml_progress') || '{}');
+
+<span class="hi2">// After (persists across sessions)</span>
+localStorage.setItem('ml_progress', JSON.stringify(checkState));
+const saved = JSON.parse(localStorage.getItem('ml_progress') || '{}');
+
+<span class="hi3">// Add a reset button in the progress summary:</span>
+function resetProgress() {
+  if (!confirm('Clear all progress?')) return;
+  localStorage.removeItem('ml_progress');
+  document.querySelectorAll('.topic-card input[type=checkbox]')
+    .forEach(c => { c.checked = false; c.closest('.tc-check').classList.remove('done'); });
+  updateProgress(document.createElement('input'));
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- U-02 -->
+    <div class="item" id="u02">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">U-02 · UX & Interaction</div>
+          <div class="item-title">Quiz Questions Too Few — Expand to 5–7 Per Section</div>
+          <div class="item-meta">
+            <span class="tag tag-high">🔴 Critical</span>
+            <span class="tag tag-ux">UX</span>
+            <span class="tag tag-med" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●●○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">Section 1 (Machine Learning) has 3 quiz questions. Section 2 (Deep Learning) has only 2. For a section covering 40+ hours of content, 2–3 questions is not sufficient to assess comprehension. Learners get a section score like "2/2 — Perfect!" which is trivially achievable and provides false confidence. The quiz feature is the best engagement mechanism in the file but is severely underutilized.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix — Suggested Questions by Section</div>
+          <div class="steps-list">
+            <div class="step-item"><div class="step-dot">S1</div><div><strong>ML Foundations (7 questions):</strong> L1 vs L2 regularization (existing), Random Forest (existing), t-SNE (existing), + What is the kernel trick in SVM? + When would you use DBSCAN over K-Means? + What does AUC-ROC measure? + What is the bias-variance tradeoff?</div></div>
+            <div class="step-item"><div class="step-dot">S2</div><div><strong>Deep Learning (6 questions):</strong> LayerNorm vs BatchNorm (existing), Multi-head attention (existing), + What does the ReLU activation function solve vs sigmoid? + What is vanishing gradient and how is it mitigated? + What is the role of skip connections in ResNet? + What does dropout do during inference?</div></div>
+            <div class="step-item"><div class="step-dot">S3</div><div><strong>LLMs (6 questions):</strong> What is BPE tokenization? + What is RLHF? + What makes LoRA parameter-efficient? + What is a RAG pipeline? + What is temperature in LLM sampling? + What does "emergent ability" mean in scaling laws?</div></div>
+          </div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ Also Add: Explanation Feedback</div>
+          <div class="block-text">Currently, wrong answers only show "✗ Not quite — review the topic and try to understand why!" — no actual explanation is given. Each answer option should include a short explanation shown after selection, explaining <em>why</em> the correct answer is right. This turns the quiz into a micro-learning tool rather than a binary pass/fail check.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- U-03 -->
+    <div class="item" id="u03">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">U-03 · UX & Interaction</div>
+          <div class="item-title">Topic Card Expand / Detail Drawer Missing</div>
+          <div class="item-meta">
+            <span class="tag tag-high">🔴 Critical</span>
+            <span class="tag tag-ux">UX</span>
+            <span class="tag tag-med" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●●○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">Every topic card shows a single 1–2 line description. For example, "Backpropagation: Forward/backward pass, chain rule, computational graphs, manual backprop in NumPy." This tells a learner <em>what</em> it is but not: what to focus on, common misconceptions, what to implement, what a typical interview question looks like, or which resource to start with. The card is a label, not a guide.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix — Expandable Drawer</div>
+          <div class="block-text">Add a small "▸ Details" toggle button on each card that expands a hidden drawer containing: a deeper description (3–5 sentences), 1–2 "key things to implement," 1 "common interview question," 1 "common mistake to avoid," and a direct link to the best resource for that topic. This transforms cards from labels into micro-guides without cluttering the default view.</div>
+        </div>
+        <div class="code-block">
+          <div class="block-label code">▸ Card Drawer Pattern</div>
+          <pre><span class="hi">/* Add to each card's HTML */</span>
+&lt;button class="tc-expand" onclick="toggleDrawer(this)"&gt;▸ Details&lt;/button&gt;
+&lt;div class="tc-drawer"&gt;
+  &lt;div class="drawer-section"&gt;
+    &lt;div class="drawer-label"&gt;Key Things to Implement&lt;/div&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Implement backprop manually for a 2-layer MLP in NumPy&lt;/li&gt;
+      &lt;li&gt;Visualize computational graph with autograd&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;div class="drawer-section"&gt;
+    &lt;div class="drawer-label"&gt;Common Interview Q&lt;/div&gt;
+    &lt;p&gt;"Derive backprop for a softmax + cross-entropy output."&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;a href="https://karpathy.medium.com/..." class="drawer-link"&gt;
+    Best resource → Karpathy: Backprop from scratch
+  &lt;/a&gt;
+&lt;/div&gt;
+
+<span class="hi2">/* CSS */</span>
+.tc-drawer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+.tc-drawer.open { max-height: 400px; }
+.tc-expand { font-size: 10px; color: var(--muted); background: none;
+             border: none; cursor: pointer; margin-top: 8px;
+             transition: color 0.2s; }
+.tc-expand:hover { color: var(--c1); }</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- U-04 -->
+    <div class="item" id="u04">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">U-04 · UX & Interaction</div>
+          <div class="item-title">Search Resets innerHTML — XSS Risk and Text Loss</div>
+          <div class="item-meta">
+            <span class="tag tag-high">🔴 Critical</span>
+            <span class="tag tag-ux">UX</span>
+            <span class="tag tag-low" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●○○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">The search function does: <code>el.innerHTML = el.textContent</code> to reset, then replaces with a regex that wraps matched text in <code>&lt;mark&gt;</code> tags. This has two issues. (1) If any topic name or description contains an ampersand, angle bracket, or quote character that was originally HTML-encoded, <code>el.textContent</code> will decode it and re-setting <code>innerHTML</code> may create broken markup. (2) Using <code>innerHTML</code> with a regex replacement on user-input is a mild XSS vector if user types <code>&lt;img src=x onerror=alert(1)&gt;</code> — the regex wraps it in a <code>&lt;mark&gt;</code> but the inner HTML still executes.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix</div>
+          <div class="block-text">Sanitize the search term before injecting it into the regex. Use <code>escapeHTML()</code> on the term, or better yet, use a <code>TreeWalker</code> to wrap text nodes directly without touching innerHTML. This also fixes the text-loss edge case.</div>
+        </div>
+        <div class="code-block">
+          <div class="block-label code">▸ Safe Highlight Function</div>
+          <pre><span class="hi2">function escapeHTML(str) {</span>
+  return str.replace(/[&lt;&gt;"'&amp;]/g, c =&gt; ({
+    '&amp;':'&amp;amp;','&lt;':'&amp;lt;','&gt;':'&amp;gt;',
+    '"':'&amp;quot;',"'":'&amp;#39;'
+  }[c]));
+}
+
+<span class="hi2">function doSearch(q) {</span>
+  const term = q.toLowerCase().trim();
+  const safeTerm = escapeHTML(term); <span class="hi">// sanitize before regex</span>
+  document.querySelectorAll('.topic-card').forEach(card =&gt; {
+    const text = card.textContent.toLowerCase();
+    const show = !term || text.includes(term);
+    card.style.display = show ? '' : 'none';
+    card.querySelectorAll('.tc-name,.tc-desc').forEach(el =&gt; {
+      if (!term) { el.innerHTML = el.textContent; return; }
+      const re = new RegExp(`(<span class="hi3">${safeTerm}</span>)`, 'gi');
+      <span class="hi5">// Use textContent as base, escape it, then do replace</span>
+      el.innerHTML = escapeHTML(el.textContent)
+        .replace(re, '&lt;mark class="highlight"&gt;$1&lt;/mark&gt;');
+    });
+  });
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- U-05 -->
+    <div class="item" id="u05">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">U-05 · UX & Interaction</div>
+          <div class="item-title">No Prerequisite / Dependency Signalling Between Topics</div>
+          <div class="item-meta">
+            <span class="tag tag-med">🟡 Moderate</span>
+            <span class="tag tag-ux">UX</span>
+            <span class="tag tag-med" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●●○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">There is no visual indication that certain topics depend on others. A beginner could open Section 3 (LLMs) and start studying "LoRA Fine-tuning" without having studied backpropagation or attention mechanisms. There's also no signal on individual cards like "You should complete Backpropagation before this." Many learners use roadmaps non-linearly and benefit greatly from dependency hints.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix</div>
+          <div class="block-text">Add a <code>data-prereq="backprop,attention"</code> attribute to relevant topic cards. When a user hovers a card with unmet prerequisites (based on checkbox state), show a tooltip like "⚠ Recommended first: Backpropagation, Attention Mechanism." Also add a small "Requires:" badge row on advanced cards that links to the prerequisite card's section. This is especially important for Section 3–5 topics.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- U-06 -->
+    <div class="item" id="u06">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">U-06 · UX & Interaction</div>
+          <div class="item-title">Estimated Time to Completion Not Shown Globally</div>
+          <div class="item-meta">
+            <span class="tag tag-low">🟢 Enhancement</span>
+            <span class="tag tag-ux">UX</span>
+            <span class="tag tag-low" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●○○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">Individual cards show time estimates (e.g. "⏱ 2 weeks") but there is no aggregated estimate. The progress widget shows "X / Y topics done" but not "~Z hours remaining." The hero stats say "200+ topics" and "18-month roadmap" but don't connect these to the user's current completion state. A learner has no sense of how much total time they've committed or how much remains.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix</div>
+          <div class="block-text">Parse the <code>data-time</code> attribute (or infer from the time badge text) on each card, accumulate totals, and show "Estimated time remaining: ~142 hours" in the progress summary widget. Update it live as checkboxes are ticked. This makes the tracker genuinely useful for scheduling study time and creates a satisfying sense of accumulating completion.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ INFO ARCHITECTURE ════════ -->
+  <div id="cat-ia">
+    <div class="cat-divider">
+      <div class="cat-label" style="color:#ec4899">🗂 Category 03 — Information Architecture</div>
+      <div class="cat-line"></div>
+      <div style="font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;white-space:nowrap;">5 items</div>
+    </div>
+
+    <!-- I-01 -->
+    <div class="item" id="i01">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">I-01 · Information Architecture</div>
+          <div class="item-title">No Career Path / Role Selector</div>
+          <div class="item-meta">
+            <span class="tag tag-high">🔴 Critical</span>
+            <span class="tag tag-ia">Info Architecture</span>
+            <span class="tag tag-med" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●●●</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">The roadmap presents one single learning path for everyone. But the field has at least four distinct careers with very different required skills: <strong>ML Engineer</strong> (deployment, infra, production systems), <strong>Research Scientist</strong> (math depth, paper reading, novel architectures), <strong>Data Scientist</strong> (statistics, business analytics, visualization), and <strong>AI/LLM Product Engineer</strong> (prompt engineering, RAG, agents, API integration). A student pursuing a Data Science role doesn't need Flash Attention or PPO — but a research role doesn't need FastAPI or Docker as urgently. Without role targeting, the roadmap is equally relevant to everyone and therefore optimally tailored to no one.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix</div>
+          <div class="block-text">Add a "Choose Your Path" modal or section at the top with 4 role cards. Each role sets a <code>data-role</code> attribute on the body. Cards tagged for that role get a green glow border, while optional/irrelevant cards get a muted opacity. Include a small "Relevance" badge per card: "Essential for MLE," "Research priority," etc. Also add an estimated salary range and example job titles per path to motivate the choice.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- I-02 -->
+    <div class="item" id="i02">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">I-02 · Information Architecture</div>
+          <div class="item-title">Missing Dedicated Interview Prep Section</div>
+          <div class="item-meta">
+            <span class="tag tag-high">🔴 Critical</span>
+            <span class="tag tag-ia">Info Architecture</span>
+            <span class="tag tag-med" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●●○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">Interview-relevant topics are scattered across all sections as a 🎯 badge. But there is no consolidated view for someone who is 2 weeks from an ML interview and needs to do a targeted review. The filter for "Interview" helps but still shows isolated cards without any interview-specific context: no system design questions, no "explain like you're in an interview" framing, no typical question categories (behavioral, coding, ML theory, system design), no company-specific focus areas.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix</div>
+          <div class="block-text">Add a dedicated "Interview Prep Mode" section (collapsible, like other sections) containing: (1) a consolidated list of the top 30 ML interview questions by category, (2) ML system design question templates ("Design a recommendation system for Netflix"), (3) behavioral Q framing for ML contexts ("Tell me about a time a model failed in production"), and (4) a 2-week cramming checklist. Tag this section as "Interview Mode" and make the filter button auto-expand it.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- I-03 -->
+    <div class="item" id="i03">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">I-03 · Information Architecture</div>
+          <div class="item-title">No Difficulty Progression Visualisation</div>
+          <div class="item-meta">
+            <span class="tag tag-med">🟡 Moderate</span>
+            <span class="tag tag-ia">Info Architecture</span>
+            <span class="tag tag-low" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●○○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">The roadmap has 5 phases over 18 months, but no visual showing how difficulty ramps across them. A learner can't tell at a glance that Section 1 is 70% Beginner and Section 4 is 80% Advanced. The phase bar at the top has dot numbers and labels but no visual weight or difficulty representation. This makes it hard to mentally plan when to intensify effort.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix</div>
+          <div class="block-text">Add a small stacked bar chart below the phase timeline showing the proportion of Beginner / Intermediate / Advanced topics in each phase. This can be done in pure CSS using a 3-segment colored bar per phase dot. Additionally, show the topic count and estimated hours per phase in the phase label area. This is a purely additive enhancement, no existing elements need changing.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- I-04 -->
+    <div class="item" id="i04">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">I-04 · Information Architecture</div>
+          <div class="item-title">Section 5 (Agentic AI) Lacks Internal Structure</div>
+          <div class="item-meta">
+            <span class="tag tag-med">🟡 Moderate</span>
+            <span class="tag tag-ia">Info Architecture</span>
+            <span class="tag tag-med" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●●○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">The Agentic AI section covers a rapidly evolving field but its topic groupings appear less structured than earlier sections. Unlike Section 1 which clearly separates "Math Prerequisites," "Core Algorithms," "Tools," and "Projects," the agentic section mixes conceptual topics, framework-specific topics, and deployment topics without clear group boundaries. Topics like "LangGraph," "Function Calling," "Memory Systems," and "Multi-Agent Orchestration" need hierarchical grouping to show how they relate.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ Suggested Group Structure for Agentic AI</div>
+          <div class="steps-list">
+            <div class="step-item"><div class="step-dot">G1</div><div><strong>Core Concepts:</strong> Agent Loop, Planning & Reasoning, Tool Use / Function Calling, Memory Systems (short-term, long-term, semantic)</div></div>
+            <div class="step-item"><div class="step-dot">G2</div><div><strong>Frameworks:</strong> LangChain Agents, LangGraph (stateful agents), AutoGen / CrewAI (multi-agent), OpenAI Assistants API</div></div>
+            <div class="step-item"><div class="step-dot">G3</div><div><strong>Infrastructure:</strong> Sandboxing & Code Execution, MCP (Model Context Protocol), Evaluation & Safety, Observability (LangSmith, Langfuse)</div></div>
+            <div class="step-item"><div class="step-dot">G4</div><div><strong>Advanced:</strong> Multi-Agent Orchestration, Self-Reflection (ReAct, Reflexion), Agentic RAG, Human-in-the-Loop</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- I-05 -->
+    <div class="item" id="i05">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">I-05 · Information Architecture</div>
+          <div class="item-title">Resources Not Rated or Sorted by Quality</div>
+          <div class="item-meta">
+            <span class="tag tag-low">🟢 Enhancement</span>
+            <span class="tag tag-ia">Info Architecture</span>
+            <span class="tag tag-low" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●○○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">Each section lists 5–6 resources with just a name and type badge (Course, Book, Video, Docs). There's no indication of which resource is the <em>best starting point</em>, which is most beginner-friendly, which goes deepest, or which is free vs paid. For Section 2 (Deep Learning), a beginner shouldn't start with Goodfellow's textbook — they should start with fast.ai — but the list gives no ordering signal.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix</div>
+          <div class="block-text">Add a "⭐ Start Here" badge to the single best entry-point resource per section. Add a "Free" badge to all no-cost resources. Optionally add a difficulty indicator (🟢/🟡/🔴) per resource. Sort resources within each section: Start Here first, then by difficulty ascending. Add a "Best for: Beginners / Math-focused / Hands-on" label to each resource.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ CONTENT ════════ -->
+  <div id="cat-content">
+    <div class="cat-divider">
+      <div class="cat-label" style="color:var(--c3)">📚 Category 04 — Content Gaps</div>
+      <div class="cat-line"></div>
+      <div style="font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;white-space:nowrap;">7 items</div>
+    </div>
+
+    <!-- C-01 -->
+    <div class="item" id="c01">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">C-01 · Content Gap</div>
+          <div class="item-title">MLOps / Production ML — Entire Phase Missing</div>
+          <div class="item-meta">
+            <span class="tag tag-high">🔴 Critical</span>
+            <span class="tag tag-content">Content</span>
+            <span class="tag tag-med" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●●●</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">The roadmap goes from training models directly to deploying them via FastAPI — but omits the entire discipline of <strong>MLOps</strong> that makes production ML reliable. No mention of: model versioning (MLflow, DVC), experiment tracking (Weights & Biases), data drift detection (Evidently AI, WhyLabs), feature stores (Feast), CI/CD for ML (GitHub Actions + DVC), A/B testing models in production, or model monitoring dashboards. This is consistently cited as the #1 gap in ML education vs industry practice.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ Suggested Phase 6 — MLOps & Production ML</div>
+          <div class="steps-list">
+            <div class="step-item"><div class="step-dot">G1</div><div><strong>Experiment Tracking:</strong> MLflow (runs, metrics, artifact storage), Weights & Biases (sweeps, dashboards), Neptune.ai</div></div>
+            <div class="step-item"><div class="step-dot">G2</div><div><strong>Model Versioning & Pipelines:</strong> DVC (data version control), ZenML / Metaflow (pipeline orchestration), model registry</div></div>
+            <div class="step-item"><div class="step-dot">G3</div><div><strong>Serving & Deployment:</strong> BentoML, Ray Serve, TorchServe, Triton Inference Server, latency vs throughput trade-offs</div></div>
+            <div class="step-item"><div class="step-dot">G4</div><div><strong>Monitoring:</strong> Data drift (Evidently AI), model degradation detection, alerting, retraining triggers, shadow deployments</div></div>
+            <div class="step-item"><div class="step-dot">G5</div><div><strong>Feature Stores:</strong> Feast, Tecton — offline vs online serving, point-in-time correctness</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C-02 -->
+    <div class="item" id="c02">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">C-02 · Content Gap</div>
+          <div class="item-title">Cloud ML Platforms Not Covered</div>
+          <div class="item-meta">
+            <span class="tag tag-high">🔴 Critical</span>
+            <span class="tag tag-content">Content</span>
+            <span class="tag tag-med" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●●○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">The vast majority of ML engineering roles at companies require working with at least one cloud ML platform. Yet the roadmap makes zero mention of <strong>AWS SageMaker</strong>, <strong>Google Vertex AI</strong>, <strong>Azure ML</strong>, <strong>HuggingFace Inference Endpoints</strong> (beyond Spaces), or <strong>Replicate</strong>. Cloud certifications (AWS ML Specialty, Google Professional ML Engineer) are highly valued and align with the roadmap's goals. Not including even a "choose one cloud" recommendation is a significant gap for job readiness.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix</div>
+          <div class="block-text">Add a "Cloud ML" topic group inside the MLOps phase (or in Section 2's tools section). Include: how to run a SageMaker training job, how to use Vertex AI Pipelines for orchestration, how to deploy a HuggingFace model to an Inference Endpoint. Add a "Pick Your Cloud" note pointing learners to one platform based on their background (AWS for most industry roles, GCP for research-adjacent, Azure for enterprise). Also link to the official certification paths.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C-03 -->
+    <div class="item" id="c03">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">C-03 · Content Gap</div>
+          <div class="item-title">Data Engineering Fundamentals Absent</div>
+          <div class="item-meta">
+            <span class="tag tag-med">🟡 Moderate</span>
+            <span class="tag tag-content">Content</span>
+            <span class="tag tag-med" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●●○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">Real ML work is 60–80% data work. But the roadmap covers only NumPy/Pandas for data manipulation. Missing entirely: SQL at scale (window functions, query optimization), Spark/PySpark for large datasets, data pipeline tools (Airflow, Prefect), data quality frameworks (Great Expectations, dbt), columnar formats (Parquet, Arrow), and streaming data (Kafka basics). ML engineers who don't understand data engineering struggle with the most common production issues.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix</div>
+          <div class="block-text">Add a "Data Engineering Foundations" topic group to Section 1 or as an optional Phase 0. Include: advanced SQL (window functions, CTEs, query plans), Parquet + Pyarrow, intro to PySpark, intro to Airflow, and data versioning with DVC. Mark these as "Recommended for MLE roles" rather than mandatory for all paths. Estimate ~3 weeks of time investment.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C-04 -->
+    <div class="item" id="c04">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">C-04 · Content Gap</div>
+          <div class="item-title">AI Safety / Responsible AI / Ethics Not Covered</div>
+          <div class="item-meta">
+            <span class="tag tag-med">🟡 Moderate</span>
+            <span class="tag tag-content">Content</span>
+            <span class="tag tag-low" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●○○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">There is no mention of bias in ML models, fairness metrics, model cards, datasheets for datasets, AI safety fundamentals (interpretability, RLHF alignment), or regulatory context (EU AI Act basics). These are increasingly tested in interviews, required in job descriptions, and expected by the industry. A roadmap published in 2025 that omits Responsible AI is teaching an incomplete picture of the profession.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix</div>
+          <div class="block-text">Add a "Responsible AI" topic group to Section 1 or Section 3 (LLMs). Include: bias and fairness metrics (demographic parity, equalized odds), SHAP / LIME for interpretability, model cards (HuggingFace format), adversarial robustness basics, and a brief EU AI Act overview. Add Anthropic's "Constitutional AI" and OpenAI's Alignment research as resources in Section 3. Estimate ~4–6 days of study time.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C-05 -->
+    <div class="item" id="c05">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">C-05 · Content Gap</div>
+          <div class="item-title">No Hardware / GPU Fundamentals</div>
+          <div class="item-meta">
+            <span class="tag tag-med">🟡 Moderate</span>
+            <span class="tag tag-content">Content</span>
+            <span class="tag tag-low" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●○○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">Deep Learning and LLM sections discuss Flash Attention and quantization (INT4/INT8) but never explain <em>why</em> these matter — i.e., the GPU memory hierarchy, VRAM constraints, HBM vs SRAM, tensor cores, CUDA parallelism basics, and mixed-precision training (FP16/BF16). Understanding hardware is essential for LLM fine-tuning, quantization decisions, and inference optimization, yet it's completely absent from the roadmap.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix</div>
+          <div class="block-text">Add a "GPU & Hardware Fundamentals" card group inside Section 2 (Deep Learning) covering: GPU memory hierarchy (VRAM, HBM, SRAM), CUDA basics (kernels, threads, blocks), mixed-precision training (FP16, BF16, why TF32 exists), memory-efficient training (gradient checkpointing, activation offloading), and compute efficiency metrics (FLOPS, MFU). Tim Dettmers' blog posts are the gold-standard resource. Estimate 1 week of study.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C-06 -->
+    <div class="item" id="c06">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">C-06 · Content Gap</div>
+          <div class="item-title">No Multimodal AI Coverage (Vision-Language Models)</div>
+          <div class="item-meta">
+            <span class="tag tag-med">🟡 Moderate</span>
+            <span class="tag tag-content">Content</span>
+            <span class="tag tag-low" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●●○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">Section 4 (Generative AI) mentions Stable Diffusion and MusicGen but does not cover Vision-Language Models (VLMs) — one of the fastest-growing areas of AI in 2024–2025. Models like CLIP, LLaVA, GPT-4V, Gemini Vision, and Moondream are essential knowledge for building modern AI applications. The Multimodal Content Studio capstone project uses these implicitly but the roadmap never teaches them explicitly.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix</div>
+          <div class="block-text">Add a "Vision-Language Models" topic group to Section 3 or 4 covering: CLIP (contrastive image-text pretraining), visual question answering (LLaVA, InstructBLIP), document understanding (DocVQA, Nougat), and multimodal RAG (indexing images + text together). Include the Flamingo paper and HuggingFace's transformers VLM tutorials as resources. This connects naturally to the Multimodal Content Studio capstone.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C-07 -->
+    <div class="item" id="c07">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">C-07 · Content Gap</div>
+          <div class="item-title">Career Outcomes / Salary Data Not Included</div>
+          <div class="item-meta">
+            <span class="tag tag-low">🟢 Enhancement</span>
+            <span class="tag tag-content">Content</span>
+            <span class="tag tag-low" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●○○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">The roadmap is 18 months of investment with no clear statement of expected outcomes. Learners have no visibility into what roles they're targeting, what companies hire for each track, what salaries to expect, or what the job market looks like for each specialisation. For a roadmap used by self-learners making significant time investments, this contextual anchoring is a major motivational and practical gap.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix</div>
+          <div class="block-text">Add a "Career Outcomes" section or extend the hero stats with role cards showing: role title, required phases completed, median US salary (from levels.fyi / Glassdoor), example companies hiring, and typical interview format. Add a "Where can I work after Phase X?" callout box in each section footer. This requires only static HTML — no dynamic data needed — and dramatically increases the practical value of the roadmap for career changers.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ TECHNICAL ════════ -->
+  <div id="cat-tech">
+    <div class="cat-divider">
+      <div class="cat-label" style="color:var(--c7)">🔧 Category 05 — Technical / Code Quality</div>
+      <div class="cat-line"></div>
+      <div style="font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;white-space:nowrap;">3 items</div>
+    </div>
+
+    <!-- T-01 -->
+    <div class="item" id="t01">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">T-01 · Technical</div>
+          <div class="item-title">Quiz Score Tracking Logic Bug — Section ID Mismatch</div>
+          <div class="item-meta">
+            <span class="tag tag-high">🔴 Bug</span>
+            <span class="tag tag-tech">Technical</span>
+            <span class="tag tag-low" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●○○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">The <code>answerQ</code> function derives the section ID from the question ID using: <code>const secId = qid.split('_')[0].replace('q', 's')</code>. This means for question ID <code>"q1_1"</code> it produces <code>"s1"</code>, and looks for <code>score_s1</code>. Then it queries: <code>document.querySelectorAll(`[id^="q${secId.replace('s','')}"]`)</code> — which becomes <code>id^="q1"</code>. This accidentally matches <strong>all question IDs starting with "q1"</strong>, including <code>q10_x</code>, <code>q11_x</code>, <code>q12_x</code> from future sections. The score will never show "all answered" because the count is wrong. This is a latent bug that becomes visible when sections beyond section 9 are added.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix</div>
+          <div class="block-text">Use a data attribute on the quiz container to identify section membership, rather than parsing the ID string. Add <code>data-section="s1"</code> to each quiz container, then query by that attribute. This makes the logic robust regardless of section numbering.</div>
+        </div>
+        <div class="code-block">
+          <div class="block-label code">▸ Robust Quiz Score Logic</div>
+          <pre><span class="hi">/* HTML: add data-sec to quiz container */</span>
+&lt;div id="quiz-s1" <span class="hi2">data-sec="s1"</span>&gt;
+  &lt;div class="quiz-q" id="q1_1" <span class="hi2">data-sec="s1"</span>&gt;...&lt;/div&gt;
+&lt;/div&gt;
+
+<span class="hi">/* JS: use data-sec attribute instead of id parsing */</span>
+function answerQ(qid, btn, correct) {
+  const qEl = document.getElementById(qid);
+  const secId = qEl.dataset.sec; <span class="hi2">// reliable, no string manipulation</span>
+  
+  <span class="hi3">// Get ALL questions in this section by data attribute</span>
+  const allQs = document.querySelectorAll(
+    `.quiz-q[data-sec="${secId}"]`
+  );
+  const answered = [...allQs].filter(q => quizAnswered[q.id]).length;
+  <span class="hi2">// Now count is always correct</span>
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- T-02 -->
+    <div class="item" id="t02">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">T-02 · Technical</div>
+          <div class="item-title">scrollTo Shadows Native window.scrollTo</div>
+          <div class="item-meta">
+            <span class="tag tag-med">🟡 Bug</span>
+            <span class="tag tag-tech">Technical</span>
+            <span class="tag tag-low" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●○○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">A global function is declared as <code>function scrollTo(id)</code> which shadows the native <code>window.scrollTo()</code> method. The back-to-top button uses <code>window.scrollTo({top:0,behavior:'smooth'})</code> which correctly bypasses it, but this naming collision is fragile and confusing. Any future developer adding code that calls <code>scrollTo()</code> expecting the native behavior will get the custom implementation instead, causing silent bugs.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix</div>
+          <div class="block-text">Rename the custom function to something unambiguous like <code>scrollToSection(id)</code> and update all three call sites in the phase timeline <code>onclick</code> handlers. This is a 5-minute find-and-replace.</div>
+        </div>
+        <div class="code-block">
+          <div class="block-label code">▸ Rename Fix</div>
+          <pre><span class="hi5">// Before — shadows window.scrollTo</span>
+function scrollTo(id) { ... }
+&lt;div onclick="scrollTo('s1')"&gt;
+
+<span class="hi2">// After — unambiguous name</span>
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+&lt;div onclick="scrollToSection('s1')"&gt;</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- T-03 -->
+    <div class="item" id="t03">
+      <div class="item-header">
+        <div class="item-left">
+          <div class="item-id">T-03 · Technical</div>
+          <div class="item-title">section.open max-height:9999px Causes Layout Jank</div>
+          <div class="item-meta">
+            <span class="tag tag-low">🟢 Performance</span>
+            <span class="tag tag-tech">Technical</span>
+            <span class="tag tag-low" style="color:#94a3b8;border-color:rgba(148,163,184,0.3);background:rgba(148,163,184,0.06);">Effort ●○○</span>
+          </div>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="problem-block">
+          <div class="block-label problem">▸ The Problem</div>
+          <div class="block-text">Section expand animations use <code>max-height: 9999px</code> as the open state, with <code>transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1)</code>. The browser animates from <code>0</code> to <code>9999px</code>, which means the actual visible content (say, 600px tall) animates through a 9999px range — the easing curve only looks natural for the first ~6% of the transition. This causes the expand animation to appear instant and the close animation to appear sluggish. Additionally, sections with a lot of content (quiz + projects + resources) may be &gt;3000px, causing layout recalculations on expand.</div>
+        </div>
+        <div class="solution-block">
+          <div class="block-label solution">▸ The Fix — JS-based height calculation</div>
+          <div class="block-text">Measure the actual <code>scrollHeight</code> of each section body in JavaScript and set it as the target <code>max-height</code> explicitly before transitioning. This gives the correct animation curve. Alternatively, use the newer CSS <code>grid-template-rows: 0fr / 1fr</code> animation technique which animates to the intrinsic height without needing JS.</div>
+        </div>
+        <div class="code-block">
+          <div class="block-label code">▸ CSS Grid Accordion (Modern Fix)</div>
+          <pre><span class="hi">/* CSS: replace max-height with grid-row animation */</span>
+.sec-body {
+  display: grid;
+  grid-template-rows: <span class="hi2">0fr</span>;
+  transition: grid-template-rows 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.section.open .sec-body {
+  grid-template-rows: <span class="hi2">1fr</span>;
+}
+.sec-inner {
+  overflow: hidden; <span class="hi3">/* required for 0fr to clip content */</span>
+  min-height: 0;   <span class="hi3">/* required for 0fr to work in some browsers */</span>
+}
+
+<span class="hi">/* Remove the max-height lines entirely — no longer needed */</span></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ PRIORITY SUMMARY ════════ -->
+  <div id="summary">
+    <div class="cat-divider">
+      <div class="cat-label" style="color:var(--c4)">📊 Priority Matrix — All 28 Improvements Ranked</div>
+      <div class="cat-line"></div>
+    </div>
+
+    <div style="overflow-x:auto">
+    <table class="sum-table">
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Category</th>
+        <th>Priority</th>
+        <th>Effort</th>
+        <th>Impact</th>
+      </tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">U-01</td><td>localStorage (progress persistence)</td><td><span class="tag tag-ux">UX</span></td><td><span class="prio-badge prio-p1">P1 Critical</span></td><td>●○○</td><td>Every user, every session</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">D-02</td><td>Mobile responsive breakpoints</td><td><span class="tag tag-design">Design</span></td><td><span class="prio-badge prio-p1">P1 Critical</span></td><td>●●○</td><td>~50% of users on mobile</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">C-01</td><td>MLOps / Production ML phase</td><td><span class="tag tag-content">Content</span></td><td><span class="prio-badge prio-p1">P1 Critical</span></td><td>●●●</td><td>Job-readiness gap</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">C-02</td><td>Cloud ML platforms coverage</td><td><span class="tag tag-content">Content</span></td><td><span class="prio-badge prio-p1">P1 Critical</span></td><td>●●○</td><td>Required in most JDs</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">U-02</td><td>Expand quizzes to 5–7 + explanations</td><td><span class="tag tag-ux">UX</span></td><td><span class="prio-badge prio-p1">P1 Critical</span></td><td>●●○</td><td>Core learning value</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">U-03</td><td>Topic card expandable drawer</td><td><span class="tag tag-ux">UX</span></td><td><span class="prio-badge prio-p1">P1 Critical</span></td><td>●●○</td><td>Depth of content</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">U-04</td><td>Search XSS sanitization</td><td><span class="tag tag-ux">UX</span></td><td><span class="prio-badge prio-p1">P1 Critical</span></td><td>●○○</td><td>Security vulnerability</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">I-01</td><td>Career path / role selector</td><td><span class="tag tag-ia">Info Arch</span></td><td><span class="prio-badge prio-p1">P1 Critical</span></td><td>●●●</td><td>Personalisation & focus</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">I-02</td><td>Dedicated interview prep section</td><td><span class="tag tag-ia">Info Arch</span></td><td><span class="prio-badge prio-p1">P1 Critical</span></td><td>●●○</td><td>High-value use case</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">T-01</td><td>Quiz score tracking bug fix</td><td><span class="tag tag-tech">Technical</span></td><td><span class="prio-badge prio-p1">P1 Bug</span></td><td>●○○</td><td>Correctness issue</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">D-01</td><td>Minimum font sizes (accessibility)</td><td><span class="tag tag-design">Design</span></td><td><span class="prio-badge prio-p2">P2 Moderate</span></td><td>●○○</td><td>Readability & WCAG</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">D-03</td><td>Phase timeline connector fix</td><td><span class="tag tag-design">Design</span></td><td><span class="prio-badge prio-p2">P2 Moderate</span></td><td>●○○</td><td>Visual polish</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">D-04</td><td>Filter bar prominence + sticky</td><td><span class="tag tag-design">Design</span></td><td><span class="prio-badge prio-p2">P2 Moderate</span></td><td>●○○</td><td>Feature discoverability</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">D-05</td><td>Light mode hardcoded color audit</td><td><span class="tag tag-design">Design</span></td><td><span class="prio-badge prio-p2">P2 Moderate</span></td><td>●●○</td><td>Theme consistency</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">D-06</td><td>Comparison table responsive + add DL table</td><td><span class="tag tag-design">Design</span></td><td><span class="prio-badge prio-p2">P2 Moderate</span></td><td>●○○</td><td>Mobile usability</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">U-05</td><td>Prerequisite / dependency signalling</td><td><span class="tag tag-ux">UX</span></td><td><span class="prio-badge prio-p2">P2 Moderate</span></td><td>●●○</td><td>Learning path clarity</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">I-03</td><td>Difficulty progression visualisation</td><td><span class="tag tag-ia">Info Arch</span></td><td><span class="prio-badge prio-p2">P2 Moderate</span></td><td>●○○</td><td>Planning aid</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">I-04</td><td>Agentic AI section restructure</td><td><span class="tag tag-ia">Info Arch</span></td><td><span class="prio-badge prio-p2">P2 Moderate</span></td><td>●●○</td><td>Content clarity</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">C-03</td><td>Data engineering fundamentals</td><td><span class="tag tag-content">Content</span></td><td><span class="prio-badge prio-p2">P2 Moderate</span></td><td>●●○</td><td>Real-world ML practice</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">C-04</td><td>AI Safety / Responsible AI</td><td><span class="tag tag-content">Content</span></td><td><span class="prio-badge prio-p2">P2 Moderate</span></td><td>●○○</td><td>Industry expectations</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">C-05</td><td>GPU / hardware fundamentals</td><td><span class="tag tag-content">Content</span></td><td><span class="prio-badge prio-p2">P2 Moderate</span></td><td>●○○</td><td>LLM training context</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">C-06</td><td>Vision-Language Models coverage</td><td><span class="tag tag-content">Content</span></td><td><span class="prio-badge prio-p2">P2 Moderate</span></td><td>●●○</td><td>Fast-growing area</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">T-02</td><td>scrollTo naming collision fix</td><td><span class="tag tag-tech">Technical</span></td><td><span class="prio-badge prio-p2">P2 Bug</span></td><td>●○○</td><td>Code quality / safety</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">D-07</td><td>Print / PDF stylesheet</td><td><span class="tag tag-design">Design</span></td><td><span class="prio-badge prio-p3">P3 Nice</span></td><td>●○○</td><td>Print usability</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">U-06</td><td>Time-remaining estimate in tracker</td><td><span class="tag tag-ux">UX</span></td><td><span class="prio-badge prio-p3">P3 Nice</span></td><td>●○○</td><td>Motivation / planning</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">I-05</td><td>Resource quality rating / sorting</td><td><span class="tag tag-ia">Info Arch</span></td><td><span class="prio-badge prio-p3">P3 Nice</span></td><td>●○○</td><td>Resource discoverability</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">C-07</td><td>Career outcomes / salary data</td><td><span class="tag tag-content">Content</span></td><td><span class="prio-badge prio-p3">P3 Nice</span></td><td>●○○</td><td>Motivational anchoring</td></tr>
+      <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">T-03</td><td>Accordion max-height jank fix</td><td><span class="tag tag-tech">Technical</span></td><td><span class="prio-badge prio-p3">P3 Nice</span></td><td>●○○</td><td>Animation smoothness</td></tr>
+    </table>
+    </div>
+
+    <!-- Effort legend -->
+    <div style="margin-top:16px;display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--text2);font-family:'IBM Plex Mono',monospace;">
+      <span><span style="color:var(--c4)">●○○</span> = &lt;2h dev time</span>
+      <span><span style="color:var(--c4)">●●○</span> = 2–8h dev time</span>
+      <span><span style="color:var(--c4)">●●●</span> = 8h+ dev time</span>
+    </div>
+  </div>
+
+</div><!-- end .main -->
+
+<div class="bottom-note">
+  AI/ML Roadmap v2 — Improvement Audit · 28 items across 5 categories<br>
+  <span style="color:var(--muted);">Generated for review purposes</span>
+</div>
+
+<button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+window.addEventListener('scroll', () => {
+  const d = document.documentElement;
+  const pct = (d.scrollTop / (d.scrollHeight - d.clientHeight)) * 100;
+  document.getElementById('sp').style.width = pct + '%';
+  const btt = document.getElementById('btt');
+  if (d.scrollTop > 400) btt.classList.add('show');
+  else btt.classList.remove('show');
+});
+</script>
+</body>
+</html>
