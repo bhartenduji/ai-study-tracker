@@ -1622,7 +1622,48 @@
         page-break-inside: avoid;
       }
     }
-  </style>
+  
+    /* Premium UI/UX Enhancements */
+    body {
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+    .topic-card {
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .topic-card:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 12px 24px -8px rgba(var(--primary-rgb), 0.2), 0 0 0 1px var(--primary);
+      border-color: var(--primary);
+    }
+    .pill {
+      transition: all 0.2s ease;
+    }
+    .pill:hover {
+      transform: scale(1.05);
+      background: var(--surface-strong);
+    }
+    .btn {
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn.primary:hover {
+      box-shadow: 0 0 15px var(--primary);
+      transform: translateY(-2px);
+    }
+    .navbar {
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(var(--background-rgb), 0.7);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .modal-content {
+      backdrop-filter: blur(20px);
+      background: rgba(var(--surface-rgb), 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+    </style>
 </head>
 
 <body>
@@ -1666,6 +1707,15 @@
         <button class="btn desktop-only" id="printBtn" type="button">Export PDF</button>
         
         <!-- Auth Controls -->
+        
+        <div id="desktopSessionTimer" class="desktop-only" style="display:flex; align-items:center; gap:0.5rem; padding:0.25rem 0.75rem; background:var(--surface); border-radius:20px; border:1px solid var(--border); margin-right:1rem;">
+          <span id="desktopTimerDisplay" style="font-family:monospace; font-size:1rem; font-weight:700; color:var(--primary);">00:00:00</span>
+          <button class="btn primary btn-sm" id="desktopTimerToggleBtn" style="padding:0.2rem 0.5rem; font-size:0.8rem;">Start</button>
+        </div>
+        <div class="desktop-only" style="display:flex; align-items:center; gap:0.5rem; border-right:1px solid var(--border); padding-right:1rem; margin-right:0.5rem;">
+          <span style="font-size:0.85rem; color:var(--text-muted)">Total Studied:</span>
+          <span id="totalStudyTimeDisplay" class="pill" style="background:var(--surface-strong); font-weight:600;">0h 0m</span>
+        </div>
         <button class="btn primary desktop-only" id="navSignInBtn" type="button">Sign In</button>
         <div id="navUserMenu" style="display:none; align-items:center; gap:0.5rem;" class="desktop-only">
           <span class="pill" id="navUserEmail" style="background:var(--surface-strong)">user@email.com</span>
@@ -1677,6 +1727,18 @@
     </div>
 
     <div class="container mobile-panel" id="mobilePanel">
+      
+      <div id="sessionTimerContainer" style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem; padding:1rem; background:var(--surface); border-radius:12px; border:1px solid var(--border);">
+        <span id="sessionTimerDisplay" style="font-family:monospace; font-size:1.2rem; font-weight:700; color:var(--primary);">00:00:00</span>
+        <button class="btn primary btn-sm" id="timerToggleBtn">Start</button>
+      </div>
+      <div style="margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:1rem;">
+        <button class="btn primary" id="mobileSignInBtn" type="button" style="width:100%; display:none;">Sign In</button>
+        <div id="mobileUserMenu" style="display:none; flex-direction:column; gap:0.5rem;">
+          <span class="pill" id="mobileUserEmail" style="text-align:center; background:var(--surface-strong)">user@email.com</span>
+          <button class="btn danger" id="mobileSignOutBtn" type="button" style="width:100%;">Log Out</button>
+        </div>
+      </div>
       <div class="nav-links">
         <a href="#timeline">Timeline</a>
         <a href="#roadmap">Roadmap</a>
@@ -2338,7 +2400,9 @@
       quizScores: {},
       generatedQuizzes: {},
       expanded: {},
-      theme: "dark"
+      theme: "dark",
+      studySessions: [],
+      totalStudyTime: 0
     };
 
     let state = loadState();
@@ -4297,8 +4361,95 @@
       });
     });
 
+    
+    // --- Study Session Timer Logic ---
+    let timerInterval = null;
+    let currentSessionSeconds = 0;
+    let isTimerRunning = false;
+
+    function formatTime(totalSeconds) {
+      const h = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
+      const m = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
+      const s = (totalSeconds % 60).toString().padStart(2, '0');
+      return `${h}:${m}:${s}`;
+    }
+
+    function formatTotalTime(totalSeconds) {
+      const h = Math.floor(totalSeconds / 3600);
+      const m = Math.floor((totalSeconds % 3600) / 60);
+      return `${h}h ${m}m`;
+    }
+
+    function updateTimerDisplays() {
+      const formatted = formatTime(currentSessionSeconds);
+      const dTimer = document.getElementById("desktopTimerDisplay");
+      const mTimer = document.getElementById("sessionTimerDisplay");
+      if (dTimer) dTimer.textContent = formatted;
+      if (mTimer) mTimer.textContent = formatted;
+      
+      const totalDisplay = document.getElementById("totalStudyTimeDisplay");
+      if (totalDisplay) {
+        totalDisplay.textContent = formatTotalTime(state.totalStudyTime + currentSessionSeconds);
+      }
+    }
+
+    function toggleTimer() {
+      const dBtn = document.getElementById("desktopTimerToggleBtn");
+      const mBtn = document.getElementById("timerToggleBtn");
+      
+      if (isTimerRunning) {
+        // Stop the timer
+        clearInterval(timerInterval);
+        isTimerRunning = false;
+        if (dBtn) dBtn.textContent = "Start";
+        if (mBtn) mBtn.textContent = "Start";
+        
+        // Save session
+        if (currentSessionSeconds > 60) { // Only save sessions longer than 1 min
+          state.studySessions.push({ date: new Date().toISOString(), durationSeconds: currentSessionSeconds });
+          state.totalStudyTime += currentSessionSeconds;
+          saveState();
+          toast(`Session saved! Studied for ${formatTotalTime(currentSessionSeconds)}`);
+        }
+        currentSessionSeconds = 0;
+        updateTimerDisplays();
+      } else {
+        // Start the timer
+        isTimerRunning = true;
+        if (dBtn) dBtn.textContent = "Stop & Save";
+        if (mBtn) mBtn.textContent = "Stop & Save";
+        
+        timerInterval = setInterval(() => {
+          currentSessionSeconds++;
+          updateTimerDisplays();
+        }, 1000);
+      }
+    }
+
+    document.getElementById("desktopTimerToggleBtn")?.addEventListener("click", toggleTimer);
+    document.getElementById("timerToggleBtn")?.addEventListener("click", toggleTimer);
+
+    // --- Sync Mobile Auth with Desktop Auth ---
+    const mobileSignInBtn = document.getElementById("mobileSignInBtn");
+    const mobileSignOutBtn = document.getElementById("mobileSignOutBtn");
+    const mobileUserMenu = document.getElementById("mobileUserMenu");
+    const mobileUserEmail = document.getElementById("mobileUserEmail");
+
+    mobileSignInBtn?.addEventListener("click", () => {
+      document.getElementById("authModal").style.display = "flex";
+      document.getElementById("mobilePanel").classList.remove("open");
+    });
+    
+    mobileSignOutBtn?.addEventListener("click", async () => {
+      await signOut(auth);
+      state = loadState();
+      fullRender();
+      toast("Logged out");
+    });
+
     bindEvents();
     fullRender();
+    updateTimerDisplays();
 
     if (auth) {
       onAuthStateChanged(auth, async (user) => {
@@ -4309,8 +4460,11 @@
         
         if (user) {
           if(navSignInBtn) navSignInBtn.style.display = "none";
+          if(mobileSignInBtn) mobileSignInBtn.style.display = "none";
           if(navUserMenu) navUserMenu.style.display = "flex";
+          if(mobileUserMenu) mobileUserMenu.style.display = "flex";
           if(navUserEmail) navUserEmail.textContent = user.email || "User";
+          if(mobileUserEmail) mobileUserEmail.textContent = user.email || "User";
           
           try {
             const docSnap = await getDoc(doc(db, "users", user.uid));
@@ -4324,7 +4478,9 @@
           } catch(e) { console.error("Error loading firestore state", e); }
         } else {
           if(navSignInBtn) navSignInBtn.style.display = "block";
+          if(mobileSignInBtn) mobileSignInBtn.style.display = "block";
           if(navUserMenu) navUserMenu.style.display = "none";
+          if(mobileUserMenu) mobileUserMenu.style.display = "none";
         }
       });
     }
